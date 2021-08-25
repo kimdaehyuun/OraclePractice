@@ -1,0 +1,105 @@
+CREATE TABLE emp_master
+(
+  emp_id     NUMBER        NOT NULL, --사원번호
+  emp_name   VARCHAR2(100) NOT NULL, --사원명
+  gender     VARCHAR2(10),           --성별
+  age        NUMBER,                 --나이
+  hire_date  DATE,                   --입사일자
+  dept_id    NUMBER,                 --부서아이디
+  address_id NUMBER,                 --주소아이디
+  CONSTRAINT emp_master_pk PRIMARY KEY (emp_id)
+);
+
+CREATE TABLE dept_master (
+  dept_id    NUMBER NOT NULL,         --부서아이디
+  dept_name  VARCHAR2(50),            --부서 명
+  use_yn     VARCHAR2(2) DEFAULT 'Y', --사용여부
+  dept_desc  VARCHAR2(100),           --부서설명
+  CONSTRAINT dept_master_pk PRIMARY KEY (dept_id)
+);
+
+
+CREATE TABLE address_master (
+  address_id   NUMBER NOT NULL,       --주소아이디 
+  city         VARCHAR2(100),         --도시 명 
+  gu           VARCHAR2(50),          --구 명
+  address_name VARCHAR2(100),         --나머지 주소
+  CONSTRAINT address_master_pk PRIMARY KEY (address_id)
+);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (1, '김사부', '남성', 56, TO_DATE('2018-01-01', 'YYYY-MM-DD'), 1, 1);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (2, '채송화', '여성', 34, TO_DATE('2018-01-01', 'YYYY-MM-DD'), 1, 2);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (3, '이익준', '남성', 45, TO_DATE('2018-01-01', 'YYYY-MM-DD'), 3, 2);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (4, '안정원', '남성', 23, TO_DATE('2018-01-01', 'YYYY-MM-DD'), 2, 3);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (5, '양석형', '남성', 45, TO_DATE('2018-01-01', 'YYYY-MM-DD'), 4, 4);
+
+INSERT INTO emp_master ( emp_id, emp_name, gender, age, hire_date, dept_id, address_id )
+VALUES (6, '김준완', '남성', 35, TO_DATE('2018-01-01', 'YYYY-MM-DD'), NULL, 4);
+
+
+INSERT INTO dept_master ( dept_id, dept_name )
+VALUES (1, '회계팀');
+
+INSERT INTO dept_master ( dept_id, dept_name )
+VALUES (2, '경영팀');
+
+INSERT INTO dept_master ( dept_id, dept_name )
+VALUES (3, '전산팀');
+
+INSERT INTO dept_master ( dept_id, dept_name )
+VALUES (4, '마케팅팀');
+
+INSERT INTO dept_master ( dept_id, dept_name )
+VALUES (5, 'IT팀');
+
+INSERT INTO address_master ( address_id, city, gu, address_name )
+VALUES (1, '서울특별시', '중구', '새문안로 12');
+
+INSERT INTO address_master ( address_id, city, gu, address_name )
+VALUES (2, '서울특별시', '서대문구', '연희로 15길');
+
+INSERT INTO address_master ( address_id, city, gu, address_name )
+VALUES (3, '서울특별시', '영등포구', '여의대로 99');
+
+INSERT INTO address_master ( address_id, city, gu, address_name )
+VALUES (4, '서울특별시', '강남구', '테헤란로 33');
+
+
+
+-- inner join
+select * 
+from emp_master e, dept_master d
+where e.dept_id = d.dept_id;
+
+-- inner join
+select *
+from emp_master e, address_master a
+where e.address_id = a.address_id
+
+--ansi sql
+select *
+from emp_master e inner join dept_master d on e.dept_id = d.dept_id
+
+--left outer join과 inner join
+select * 
+from emp_master e, dept_master d, address_master a
+--where e.dept_id = d.dept_id and e.address_id = a.address_id
+where e.dept_id = d.dept_id(+) and e.address_id = a.address_id
+order by emp_id 
+
+-- ansi sql
+select e.*, d.dept_id, d.dept_name, a.*
+from emp_master e left outer join dept_master d on e.dept_id = d.dept_id 
+    inner join address_master a on e.address_id = a.address_id
+--where e.address_id = a.address_id
+order by emp_id
+
